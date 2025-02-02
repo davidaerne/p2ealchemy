@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alchemical Items Database</title>
+    <script>
+        const alchemicalItems = {
+            "Colorful Coatings": [
+                { "name": "Blue Colorful Coating", "effect": "Stabilizes loose surfaces, supports double weight, +1 Reflex saves, +2 Athletics DC to Force Open." },
+                { "name": "Green Colorful Coating", "effect": "Creates slippery surface, difficult terrain, +2 Climb DC." },
+                { "name": "Indigo Colorful Coating", "effect": "Weakens objects, -2 Hardness, 1d4 acid damage per round." },
+                { "name": "Orange Colorful Coating", "effect": "Hazardous terrain, deals 1d4 acid damage when moved through." },
+                { "name": "Red Colorful Coating", "effect": "Trampoline effect, no falling damage, bounces half height of fall." }
+            ],
+            "Alchemist Potions": [
+                {
+                    "name": "Remove Curse Alchemical Elixir",
+                    "level": 4,
+                    "craftingDC": 18,
+                    "cost": "30 gp (raw materials)",
+                    "batchYield": 2,
+                    "traits": ["Alchemical", "Consumable", "Healing", "Magical"],
+                    "usage": "Held in 1 hand",
+                    "activate": "[Use an action] to drink or [2 actions] to administer to another creature",
+                    "effects": "The drinker can immediately attempt a new saving throw against one curse using a bonus equal to the alchemist's crafting DC. Alternatively, the alchemist may target the curse directly with this elixir using a Crafting check."
+                }
+            ],
+            "Class Feats": [
+                {
+                    "name": "Alchemist Dedication",
+                    "level": 2,
+                    "prerequisites": "Intelligence +2",
+                    "benefits": "Gain proficiency in alchemical bombs, alchemist class DC, and Crafting. Gain the Quick Alchemy benefits, creating up to 4 versatile vials during daily preparations."
+                }
+            ]
+        };
+
+        function searchItems() {
+            let query = document.getElementById("search").value.toLowerCase();
+            let results = [];
+
+            for (let category in alchemicalItems) {
+                alchemicalItems[category].forEach(item => {
+                    if (item.name.toLowerCase().includes(query)) {
+                        results.push(`<strong>${item.name}</strong>: ${item.effect || item.benefits || item.effects}`);
+                    }
+                });
+            }
+
+            document.getElementById("results").innerHTML = results.length > 0 ? results.join("<br><br>") : "No matches found.";
+        }
+    </script>
+</head>
+<body>
+    <h1>Alchemical Items Database</h1>
+    <input type="text" id="search" placeholder="Search for an item..." oninput="searchItems()">
+    <div id="results"></div>
+</body>
+</html>
