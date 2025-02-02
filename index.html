@@ -3,9 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alchemical Items Database</title>
+    <title>Pathfinder 2E Alchemy Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .item-list {
+            list-style: none;
+            padding: 0;
+        }
+        .item-list li {
+            background: #e0e0e0;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
     <script>
-        const alchemicalItems = {
+        const alchemicalItems = JSON.parse(localStorage.getItem('alchemyData')) || {
             "Colorful Coatings": [
                 { "name": "Blue Colorful Coating", "effect": "Stabilizes loose surfaces, supports double weight, +1 Reflex saves, +2 Athletics DC to Force Open." },
                 { "name": "Green Colorful Coating", "effect": "Creates slippery surface, difficult terrain, +2 Climb DC." },
@@ -39,22 +72,39 @@
         function searchItems() {
             let query = document.getElementById("search").value.toLowerCase();
             let results = [];
-
             for (let category in alchemicalItems) {
                 alchemicalItems[category].forEach(item => {
                     if (item.name.toLowerCase().includes(query)) {
-                        results.push(`<strong>${item.name}</strong>: ${item.effect || item.benefits || item.effects}`);
+                        results.push(`<li><strong>${item.name}</strong>: ${item.effect || item.benefits || item.effects}</li>`);
                     }
                 });
             }
+            document.getElementById("results").innerHTML = results.length > 0 ? results.join("") : "<li>No matches found.</li>";
+        }
 
-            document.getElementById("results").innerHTML = results.length > 0 ? results.join("<br><br>") : "No matches found.";
+        function addItem() {
+            const itemName = document.getElementById("newItemName").value;
+            const itemEffect = document.getElementById("newItemEffect").value;
+            if (itemName && itemEffect) {
+                alchemicalItems["Custom Items"] = alchemicalItems["Custom Items"] || [];
+                alchemicalItems["Custom Items"].push({ "name": itemName, "effect": itemEffect });
+                localStorage.setItem('alchemyData', JSON.stringify(alchemicalItems));
+                alert("Item added!");
+                document.getElementById("newItemName").value = "";
+                document.getElementById("newItemEffect").value = "";
+            }
         }
     </script>
 </head>
 <body>
-    <h1>Alchemical Items Database</h1>
-    <input type="text" id="search" placeholder="Search for an item..." oninput="searchItems()">
-    <div id="results"></div>
+    <div class="container">
+        <h1>Pathfinder 2E Alchemy Manager</h1>
+        <input type="text" id="search" placeholder="Search for an item..." oninput="searchItems()">
+        <ul class="item-list" id="results"></ul>
+        <h2>Add a New Item</h2>
+        <input type="text" id="newItemName" placeholder="Item Name">
+        <input type="text" id="newItemEffect" placeholder="Item Effect">
+        <button onclick="addItem()">Add Item</button>
+    </div>
 </body>
 </html>
